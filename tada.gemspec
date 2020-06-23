@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
 
   s.files       = Dir['lib/*.rb']
   s.files      += Dir['lib/**/*.rb']
-  s.files      += Dir['bin/*']
   s.files      += Dir['docs/*']
   s.files      += Dir['README.md']
 
