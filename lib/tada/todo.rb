@@ -85,6 +85,14 @@ module TADA
     end
 
     def each_in_depth(depth: -1, &block)
+      # if depth equals 0, then return self
+      # yield self or return Enumerator
+      # for each entry in sublist
+        # set next_depth to depth
+        # unless depth be negtaive
+          # set the next_depth to one less what it is
+        # call each_in_depth with next_depth and given block
+      # return Enumerator or nil
     end
   end
 end
