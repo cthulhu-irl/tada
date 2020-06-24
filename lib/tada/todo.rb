@@ -1,7 +1,5 @@
 module TADA
   class TODO
-    include Enumerable
-
     attr_accessor :status, :title, :info, :sublist
 
     def initialize(status, title, info: {}, sublist: [])
@@ -86,7 +84,7 @@ module TADA
       # same as update(ref, todo)
     end
 
-    def each()
+    def each_in_depth(depth: -1, &block)
     end
   end
 end
