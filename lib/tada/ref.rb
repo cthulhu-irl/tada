@@ -4,7 +4,7 @@ module TADA
       # flatten the refs
       # check each ref has a valid type
         # if ref is a Ref, replace it by its to_a
-        # if ref is a String, parse it and replace it
+        # if ref is a String, parse it and replace by its to_a
       # flatten the refs and save
     end
 
