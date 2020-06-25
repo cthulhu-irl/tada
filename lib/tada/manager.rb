@@ -3,41 +3,39 @@ module TADA
     include Enumerable
 
     class << self
-      def read(file)
+      def read(file, parser: TADA::Parsers::JSONParser)
+        # parser.load(file.read())
       end
 
-      def write(file, todo_list)
+      def write(file, todo_list, parser: TADA::Parsers::JSONParser)
+        # file.write(parser.dump(todo_list))
       end
 
-      def load(str)
+      def load(str, parser: TADA::Parsers::JSONParser)
+        # same as parser.load(str)
       end
 
-      def dump(todo_list)
+      def dump(todo_list, parser: TADA::Parsers::JSONParser)
+        # same as parser.dump(todo_list)
       end
     end
 
-    def initialize(io, parser: TADA::Parsers::JSONParser)
-    end
-
-    def open(filepath)
-    end
-
-    def close()
-    end
-
-    def read(file)
-    end
-
-    def write(file)
+    def initialize(rfile, wfile: nil,
+                    parser: TADA::Parsers::JSONParser)
+      # parse and assign each argument to its internal variable
+      # set @todo_list by reading @rfile
     end
 
     def load(str)
+      # same as @todo_list = Manager.load(str)
     end
 
     def dump()
+      # same as Manager.dump(@todo_list)
     end
 
-    def each()
+    def each(&block)
+      # same as @todo_list.each
     end
 
     #-- Wrappers --
