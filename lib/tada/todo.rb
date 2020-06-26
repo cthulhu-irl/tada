@@ -11,55 +11,53 @@ module TADA
     end
 
     def create(ref, todo)
-      # if ref ends here, make the entry
-        # get first of ref entries
-        # call create on each entry and pass given entry to them
-        # return self
+      # if ref ends here, make the entry in sublist
+      if ref.empty?
+        @sublist << todo
+        return self
+      end
 
-      # add given entry to sublist
-      # return self
+      # select top level refrenced entries
+      first = ref.first
+      @sublist.each_with_index do |entry, i|
+        if entry.match?(first, i)
+          @sublist[i] = entry.create(ref.rest, todo)
+        end
+      end
+
+      return self
     end
 
     def retrieve(ref)
-      # return nil if ref is empty
-      # get the first of ref
-      # call corresponding selector depending on ref.first's type
-      # save the result in a variable
-      # if ref has a rest (ref.rest)
-        # call retrieve and pass the rest on each entry in result
-        # if returned value isn't nil
-          # replace the entry with returned value from the result
-      # flatten the result (or not!)
-      # return the result
+      return self if ref.empty?
+
+      # select rest of ref on those entries in sublist
+      # which match the first of ref
+      first = ref.first
+      @sublist.each_with_index.select do |entry, i|
+        entry.match?(first, i)
+      end.map { |x, i| x }
     end
 
     def update(ref, todo)
-      # return nil if ref is empty
-      # get the first of ref
-      # call corresponding selector depending on ref.first's type
-      # save the result in a variable
-      # if ref has a rest (ref.rest)
-        # call retrieve and pass the rest on each entry in result
-        # if returned value isn't nil
-          # replace the entry with returned value from the result
-      # flatten the result
-      # update self.sublist
-      # return self
+      # delete & create entry at ref
+      delete(ref)
+      create(ref, todo) # returns self
     end
 
     def delete(ref)
-      # return nil if ref is empty
-      # get the first of ref
-      # call corresponding selector depending on ref.first's type
-      # save the result in a variable
-      # if ref has a rest (ref.rest)
-        # call retrieve and pass the rest on each entry in result
-        # if returned value isn't nil
-          # replace the entry with returned value from the result
-      # flatten the result
-      # update self.sublist by removing entries
-      #   in the result from sublist
-      # return self
+      # if ref ends here, return nil
+      nil if ref.empty?
+
+      # select top level refrenced entries
+      first = ref.first
+      @sublist.each_with_index do |entry, i|
+        if entry.match?(first, i)
+          @sublist[i] = entry.delete(ref.rest)
+        end
+      end
+
+      return self
     end
 
     def move(src_ref, dst_ref)
@@ -69,6 +67,9 @@ module TADA
       create(dst_ref, todo)
 
       return self
+    end
+
+    def match?(ref, index)
     end
 
     def at(*refs)
