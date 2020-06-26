@@ -11,7 +11,7 @@ module TADA
     end
 
     def create(ref, todo)
-      # if ref is not nil
+      # if ref ends here, make the entry
         # get first of ref entries
         # call create on each entry and pass given entry to them
         # return self
@@ -63,25 +63,28 @@ module TADA
     end
 
     def move(src_ref, dst_ref)
-      # retrieve src_ref entry into src
-      # delete src_ref entry
-      # create src entry at dst_ref
+      # retrieve src as a copy, remove src, create the copy at dest
+      todo = retrieve(src_ref)
+      delete(src_ref)
+      create(dst_ref, todo)
+
+      return self
     end
 
     def at(*refs)
-      # same as retireve(Ref(refs))
+      refs.map { |ref| ref.mapretrieve(ref) }
     end
 
     def set(ref, todo)
-      # same as update(Ref(refs), todo)
+      update(ref, todo)
     end
 
     def [](ref)
-      # same as retrieve(ref)
+      retrieve(ref)
     end
 
     def []=(ref, todo)
-      # same as update(ref, todo)
+      update(ref, todo)
     end
 
     def each_in_depth(depth: -1, &block)
