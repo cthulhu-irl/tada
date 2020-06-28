@@ -1,3 +1,5 @@
+require 'tada/ref'
+
 module TADA
   class TODO
     attr_accessor :status, :title, :info, :sublist
@@ -70,6 +72,20 @@ module TADA
     end
 
     def match?(ref, index)
+      return ref == index if ref.is_a? Integer
+      return ref === index if ref.is_a? Range
+      return match?(ref.first) if ref.is_a? Ref
+
+      if ref.is_a? Hash
+        ref.each_pair do |key, value|
+          return false if not @info.key? key
+          return false if @info[key] !~ value
+        end
+
+        return true
+      end
+
+      raise TypeError, "expected Integer, Range, Ref, or Hash"
     end
 
     def at(*refs)
