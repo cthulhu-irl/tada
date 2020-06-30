@@ -24,6 +24,8 @@ module TADA
 
           # recurse on each entry by its sublist
           obj[KEY_SUBLIST] = raw_dump(todo.sublist)
+
+          return obj
         end
       end
 
@@ -34,8 +36,7 @@ module TADA
       end
 
       def self.dump(todo_list)
-        # call self.raw_dump with given list to get a raw dump
-        # convert the raw dump to json string and return
+        # raw_dump, then convert to json string
       end
     end
   end
