@@ -28,6 +28,9 @@ module TADA
       elsif stat.is_a? Integer and stat >= 0
         @int_stat = stat
 
+      elsif stat.is_a? Status
+        @int_stat = stat.to_i
+
       else
         raise TypeError, 'expected Integer, String or Symbol'
       end

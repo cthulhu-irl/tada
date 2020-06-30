@@ -1,11 +1,20 @@
 require 'tada/ref'
+require 'tada/status'
 
 module TADA
   class TODO
     attr_accessor :status, :title, :info, :sublist
 
     def initialize(status, title, info: {}, sublist: [])
-      # TODO types and constraints validation
+      error = proc { |s| raise TypeError, "expected " + s }
+
+      status = Status.new(status)
+
+      error.("status as a TADA::Status") if not status.is_a?(Status)
+      error.("title as a String") if not title.is_a?(String)
+      error.("info as a Hash") if not info.is_a?(Hash)
+      error.("sublist as an Array") if not sublist.is_a?(Array)
+
       @status = status
       @title = title.strip
       @info = info
