@@ -1,3 +1,5 @@
+require 'tada/todo'
+
 module TADA
   module Parsers
     class JSONParser
@@ -17,7 +19,7 @@ module TADA
         todo_list.map do |todo|
           # convert each entry in the list to a hash object
           obj = {
-            KEY_STATUS => todo.status.to_s,
+            KEY_STATUS => STATMAP[todo.status.to_i],
             KEY_TITLE  => todo.title,
             KEY_INFO   => todo.info,
           }
@@ -31,12 +33,20 @@ module TADA
 
       def self.load(str)
         # load str by builtin json parser
-        # validate the result
-        # return the result if valid, otherwise raise an error
+        raw = JSON.load(str)
+
+        # convert to desirable object and return
+        status  = STATRMAP[raw[KEY_STATUS]]
+        title   = raw[KEY_TITLE]
+        info    = raw[KEY_INFO]
+        sublist = raw[KEY_SUBLIST]
+
+        TADA::TODO.new(status, title, info: info, sublist: sublist)
       end
 
       def self.dump(todo_list)
         # raw_dump, then convert to json string
+        JSON.pretty_generate(JSONParser.raw_dump(todo_list))
       end
     end
   end
