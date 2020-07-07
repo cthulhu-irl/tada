@@ -1,6 +1,8 @@
 require 'date'
 
-require File.expand_path('./lib/tada/version', __FILE__)
+$:.unshift('lib')
+
+require 'tada/version'
 
 Gem::Specification.new do |s|
   s.name        = 'tada'
@@ -30,7 +32,7 @@ Gem::Specification.new do |s|
   s.files      += Dir['docs/*']
   s.files      += Dir['README.md']
 
-  s.executables << 'tada'
+#  s.executables << 'tada'
 
   s.add_development_dependency 'rake', '~> 13'
   s.add_development_dependency 'rubocop', '~> 0.86'
