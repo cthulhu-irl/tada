@@ -1,9 +1,11 @@
+require 'yard'
+
 desc "lint check by rubocop"
 task :lint do
 end
 
 desc "generate documentation by yard"
-task :doc do
+YARD::Rake::YardocTask.new :doc do |t|
 end
 
 desc "unit test"
