@@ -3,8 +3,23 @@ require 'tada/status'
 
 module TADA
   class TODO
-    attr_accessor :status, :title, :info, :sublist
+    attr_accessor :status  # @return [TADA::Status]
+    attr_accessor :title   # @return [String]
+    attr_accessor :info    # @return [Hash{String => String}]
+    attr_accessor :sublist # @return [Array[TADA::TODO]]
 
+    # Make a new TODO object
+    #
+    # @param [TADA::Status] status
+    #   The current status of this task.
+    #   +status+ can also be whatever +TADA::Status.new+ accepts
+    #   as its first parameter.
+    # @param [String] title
+    #   Title or summary description of the task.
+    # @param [Hash{String => String}] info
+    #   Informations about current task.
+    # @param [Array[TADA::TODO]] sublist
+    #   A list of child tasks for current task.
     def initialize(status, title, info: {}, sublist: [])
       error = proc { |s| raise TypeError, "expected " + s }
 
@@ -21,6 +36,11 @@ module TADA
       @sublist = sublist
     end
 
+    # Create the given todo at given refrence.
+    #
+    # @param [TADA::Ref] ref
+    # @param [TADA::TODO] todo
+    # @return [TADA::TODO] returns itself
     def create(ref, todo)
       # if ref ends here, make the entry in sublist
       if ref.empty?
@@ -39,6 +59,10 @@ module TADA
       return self
     end
 
+    # Get/Retrieve a todo entry at given reference.
+    #
+    # @param [TADA::Ref] ref
+    # @return [TADA::TODO, nil] returns nil if not found.
     def retrieve(ref)
       return self if ref.empty?
 
@@ -50,12 +74,22 @@ module TADA
       end.map { |x, i| x }
     end
 
+    # Update a todo entry at given refrence.
+    #
+    # @param [TADA::Ref] ref
+    # @param [TADA::TODO] todo
+    # @return [TADA::TODO] returns given +todo+
     def update(ref, todo)
       # delete & create entry at ref
       delete(ref)
       create(ref, todo) # returns self
     end
 
+    # Remove an entry at given reference.
+    #
+    # @param [TADA::Ref] ref
+    # @return [TADA::TODO, nil]
+    #   returns a copy of deleted todo entry or nil if not found.
     def delete(ref)
       # if ref ends here, return nil
       nil if ref.empty?
@@ -71,6 +105,12 @@ module TADA
       return self
     end
 
+    # Moves a todo entry at +src_ref+ to +dst_ref+
+    # by +#retrieve+, +#delete+ and +#create+.
+    #
+    # @param [TADA::Ref] src_ref
+    # @param [TADA::Ref] dst_ref
+    # @return [TADA::TODO] returns itself
     def move(src_ref, dst_ref)
       # retrieve src as a copy, remove src, create the copy at dest
       todo = retrieve(src_ref)
@@ -80,6 +120,13 @@ module TADA
       return self
     end
 
+    # checks if this entry match given reference considering that
+    # this entry is at given index of its parent's sublist.
+    #
+    # @param [TADA::Ref] ref
+    # @param [Integer] index
+    # @return [true, false]
+    # @raises TypeError
     def match?(ref, index)
       return ref == index if ref.is_a? Integer
       return ref === index if ref.is_a? Range
@@ -97,18 +144,34 @@ module TADA
       raise TypeError, "expected Integer, Range, Ref, or Hash"
     end
 
+    # Retrieve all given references.
+    #
+    # @param [TADA::Ref] refs
+    # @return [Array[TADA::TODO, nil]]
     def at(*refs)
-      refs.map { |ref| ref.mapretrieve(ref) }
+      refs.map { |ref| retrieve(ref) }
     end
 
+    # Create/Update an entry at given reference.
+    #
+    # @param [TADA::Ref] ref
+    # @param [TADA::TODO] todo
     def set(ref, todo)
       update(ref, todo)
     end
 
+    # Retrieve given reference.
+    #
+    # @param [TADA::Ref] ref
+    # @return [TADA::TODO, nil]
     def [](ref)
       retrieve(ref)
     end
 
+    # same as {#set}
+    #
+    # @param [TADA::Ref] ref
+    # @param [TADA::TODO] todo
     def []=(ref, todo)
       update(ref, todo)
     end
