@@ -16,6 +16,22 @@ module TADA
       STATMAP = [STAT_TODO, STAT_DOING, STAT_DONE]
       STATRMAP = { STAT_TODO => 0, STAT_DOING => 1, STAT_DONE => 2 }
 
+      # Convert a json compatible representation of todo list array
+      # to a todo list with TADA::TODO instances.
+      #
+      # @param [Array<Hash>] raw_todo_list
+      # @return [Array<TADA::TODO>]
+      def self.raw_load(raw_todo_list)
+        raw_todo_list.map do |raw_todo|
+          status  = STATRMAP[raw_todo[KEY_STATUS]]
+          title   = raw_todo[KEY_TITLE]
+          info    = raw_todo[KEY_INFO]
+          sublist = self.raw_load(raw_todo[KEY_SUBLIST])
+
+          TADA::TODO.new(status, title, info: info, sublist: sublist)
+        end
+      end
+
       # Convert TADA::TODO instances to a serializable form.
       #
       # @param [Array<TADA::TODO>] todo_list
@@ -41,16 +57,8 @@ module TADA
       # @param [String] str
       # @return [Array<TADA::TODO>]
       def self.load(str)
-        # load str by builtin json parser
-        raw = JSON.load(str)
-
-        # convert to desirable object and return
-        status  = STATRMAP[raw[KEY_STATUS]]
-        title   = raw[KEY_TITLE]
-        info    = raw[KEY_INFO]
-        sublist = raw[KEY_SUBLIST]
-
-        TADA::TODO.new(status, title, info: info, sublist: sublist)
+        # load str by builtin json parser, then convert
+        self.raw_load(JSON.load(str))
       end
 
       # Convert given +todo_list+ to a json string.
