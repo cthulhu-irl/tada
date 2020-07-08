@@ -6,7 +6,7 @@ module TADA
     attr_accessor :status  # @return [TADA::Status]
     attr_accessor :title   # @return [String]
     attr_accessor :info    # @return [Hash{String => String}]
-    attr_accessor :sublist # @return [Array[TADA::TODO]]
+    attr_accessor :sublist # @return [Array<TADA::TODO>]
 
     # Make a new TODO object
     #
@@ -18,7 +18,7 @@ module TADA
     #   Title or summary description of the task.
     # @param [Hash{String => String}] info
     #   Informations about current task.
-    # @param [Array[TADA::TODO]] sublist
+    # @param [Array<TADA::TODO>] sublist
     #   A list of child tasks for current task.
     def initialize(status, title, info: {}, sublist: [])
       error = proc { |s| raise TypeError, "expected " + s }
@@ -147,7 +147,7 @@ module TADA
     # Retrieve all given references.
     #
     # @param [TADA::Ref] refs
-    # @return [Array[TADA::TODO, nil]]
+    # @return [Array<TADA::TODO, nil>]
     def at(*refs)
       refs.map { |ref| retrieve(ref) }
     end
