@@ -126,7 +126,7 @@ module TADA
     # @param [TADA::Ref] ref
     # @param [Integer] index
     # @return [true, false]
-    # @raises TypeError
+    # @raise TypeError
     def match?(ref, index)
       return ref == index if ref.is_a? Integer
       return ref === index if ref.is_a? Range
