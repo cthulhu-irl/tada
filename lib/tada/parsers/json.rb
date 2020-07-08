@@ -4,16 +4,18 @@ module TADA
   module Parsers
     # json serializer/deserializer for todo list
     class JSONParser
-      KEY_STATUS  = 'status'
-      KEY_TITLE   = 'title'
-      KEY_INFO    = 'info'
-      KEY_SUBLIST = 'sublist'
+      KEY_STATUS  = 'status' # internal
+      KEY_TITLE   = 'title' # internal
+      KEY_INFO    = 'info' # internal
+      KEY_SUBLIST = 'sublist' # internal
 
-      STAT_TODO  = 'todo'
-      STAT_DOING = 'doing'
-      STAT_DONE  = 'done'
+      STAT_TODO  = 'todo' # internal
+      STAT_DOING = 'doing' # internal
+      STAT_DONE  = 'done' # internal
 
+      # integer status to internal string status conversion map
       STATMAP = [STAT_TODO, STAT_DOING, STAT_DONE]
+      # internal string status to integer string status conversion map
       STATRMAP = { STAT_TODO => 0, STAT_DOING => 1, STAT_DONE => 2 }
 
       # Convert a json compatible representation of todo list array
