@@ -68,10 +68,10 @@ module TADA
 
       # select rest of ref on those entries in sublist
       # which match the first of ref
-      first = ref.first
+      rest = Ref.new(ref.rest)
       @sublist.each_with_index.select do |entry, i|
-        entry.match?(first, i)
-      end.map { |x, i| x }
+        entry.retrieve(rest) if entry.match?(ref.first, i)
+      end.map { |x, i| x }.flatten.compact
     end
 
     # Update a todo entry at given refrence.
