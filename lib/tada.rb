@@ -5,5 +5,6 @@ require 'tada/parsers'
 require 'tada/status'
 require 'tada/version'
 
+# TADA namespace
 module TADA
 end
