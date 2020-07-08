@@ -6,6 +6,7 @@ end
 
 desc "generate documentation by yard"
 YARD::Rake::YardocTask.new :doc do |t|
+  t.stats_options = ["--list-undoc"]
 end
 
 desc "unit test"
