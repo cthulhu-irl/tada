@@ -3,7 +3,7 @@ module TADA
   class Ref
     # Make a reference by given +refs+ which will be as a queue.
     #
-    # @param [Integer, Range, Hash{String => Regexp}, TADA::Ref] *refs
+    # @param [Array<Integer, Range, Hash{String => Regexp}, TADA::Ref>] refs
     #   given array will be flatten.
     def initialize(*refs)
       # flatten the refs
