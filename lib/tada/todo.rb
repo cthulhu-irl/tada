@@ -2,6 +2,7 @@ require 'tada/ref'
 require 'tada/status'
 
 module TADA
+  # todo unit with nesting and info options, providing CRUD utils.
   class TODO
     attr_accessor :status  # @return [TADA::Status]
     attr_accessor :title   # @return [String]
