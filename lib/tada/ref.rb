@@ -1,5 +1,10 @@
 module TADA
+  # nested reference to point at several todos
   class Ref
+    # Make a reference by given +refs+ which will be as a queue.
+    #
+    # @param [Integer, Range, Hash{String => Regexp}, TADA::Ref] *refs
+    #   given array will be flatten.
     def initialize(*refs)
       # flatten the refs
       refs.flatten!
@@ -28,18 +33,30 @@ module TADA
       @refs = refs.flatten
     end
 
+    # Check if it's not nested and there's no rest.
+    #
+    # @return [true, false]
     def is_singular()
       @refs.size == 1 and @refs[0].class != Ref
     end
 
+    # Convert to array.
+    #
+    # @return [Array[Integer, Range, Hash]]
     def to_a()
       @refs
     end
 
+    # Get top level singular reference unit.
+    #
+    # @return [Integer, Range, Hash]
     def head()
       @refs.first
     end
 
+    # Get the rest (nest) of reference units as an array.
+    #
+    # @return [Array[Integer, Range, Hash]]
     def rest()
       @refs.drop(1)
     end
