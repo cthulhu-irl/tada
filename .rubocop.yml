@@ -1,0 +1,16 @@
+require: rubocop-rake
+
+AllCops:
+    TargetRubyVersion: 2.7
+    DisplayCopNames: true
+    DisplayStyleGuide: true
+    NewCops: enable
+
+Metrics/MethodLength:
+    Enabled: false
+
+Metrics/CyclomaticComplexity:
+    Enabled: false
+
+Style/AccessorGrouping:
+    Enabled: false
