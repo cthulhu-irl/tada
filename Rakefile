@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
+require 'rubocop/rake_task'
 require 'yard'
 
-desc "lint check by rubocop"
-task :lint do
+RuboCop::RakeTask.new(:rubocop) do |t|
+  t.options = ['--display-cop-names']
 end
 
-desc "generate documentation by yard"
-YARD::Rake::YardocTask.new :doc do |t|
-  t.stats_options = ["--list-undoc"]
+YARD::Rake::YardocTask.new(:doc) do |t|
+  t.stats_options = ['--list-undoc']
 end
 
-desc "unit test"
+desc 'unit test'
 task :test do
 end
 
-desc "generate test coverage information in html by simplecov"
+desc 'generate test coverage information in html by simplecov'
 task :coverage do
 end
