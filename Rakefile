@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rubocop/rake_task'
+require 'rspec/core/rake_task'
 require 'yard'
 
 RuboCop::RakeTask.new(:rubocop) do |t|
@@ -11,8 +12,8 @@ YARD::Rake::YardocTask.new(:doc) do |t|
   t.stats_options = ['--list-undoc']
 end
 
-desc 'unit test'
-task :test do
+RSpec::Core::RakeTask.new(:spec) do |t|
+  t.pattern = Dir.glob('spec/**/*_spec.rb')
 end
 
 desc 'generate test coverage information in html by simplecov'
