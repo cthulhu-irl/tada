@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tada/todo'
 
 module TADA
@@ -14,9 +16,11 @@ module TADA
       STAT_DONE  = 'done' # internal
 
       # integer status to internal string status conversion map
-      STATMAP = [STAT_TODO, STAT_DOING, STAT_DONE]
+      STATMAP = [STAT_TODO, STAT_DOING, STAT_DONE].freeze
+
       # internal string status to integer string status conversion map
-      STATRMAP = { STAT_TODO => 0, STAT_DOING => 1, STAT_DONE => 2 }
+      STATRMAP =
+        { STAT_TODO => 0, STAT_DOING => 1, STAT_DONE => 2 }.freeze
 
       # Convert a json compatible representation of todo list array
       # to a todo list with TADA::TODO instances.
@@ -28,7 +32,7 @@ module TADA
           status  = STATRMAP[raw_todo[KEY_STATUS]]
           title   = raw_todo[KEY_TITLE]
           info    = raw_todo[KEY_INFO]
-          sublist = self.raw_load(raw_todo[KEY_SUBLIST])
+          sublist = raw_load(raw_todo[KEY_SUBLIST])
 
           TADA::TODO.new(status, title, info: info, sublist: sublist)
         end
@@ -43,14 +47,14 @@ module TADA
           # convert each entry in the list to a hash object
           obj = {
             KEY_STATUS => STATMAP[todo.status.to_i],
-            KEY_TITLE  => todo.title,
-            KEY_INFO   => todo.info,
+            KEY_TITLE => todo.title,
+            KEY_INFO => todo.info
           }
 
           # recurse on each entry by its sublist
           obj[KEY_SUBLIST] = raw_dump(todo.sublist)
 
-          return obj
+          obj
         end
       end
 
@@ -60,7 +64,7 @@ module TADA
       # @return [Array<TADA::TODO>]
       def self.load(str)
         # load str by builtin json parser, then convert
-        self.raw_load(JSON.load(str))
+        raw_load(JSON.parse(str))
       end
 
       # Convert given +todo_list+ to a json string.
@@ -69,7 +73,7 @@ module TADA
       # @return [String] json string.
       def self.dump(todo_list)
         # raw_dump, then convert to json string
-        JSON.pretty_generate(JSONParser.raw_dump(todo_list))
+        JSON.pretty_generate(raw_dump(todo_list))
       end
     end
   end

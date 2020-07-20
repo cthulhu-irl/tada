@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TADA
   # status validator by different representations
   class Status
@@ -8,15 +10,15 @@ module TADA
     INDEX_SYM = 1 # @see INDEX_STR
 
     # maps of representations per data type to integer
-    CMAP = { '-' => 0, 'x' => 1, '+' => 2 }
-    SMAP = { todo: 0, doing: 1, done: 2 } # @see CMAP
+    CMAP = { '-' => 0, 'x' => 1, '+' => 2 }.freeze
+    SMAP = { todo: 0, doing: 1, done: 2 }.freeze # @see CMAP
 
     # map of integer representation to string and symbol data types
     MAP = [
       ['-', :todo],
       ['x', :doing],
       ['+', :done]
-    ]
+    ].freeze
 
     # Initialize and convert given +stat+ to different representations
     #
@@ -24,21 +26,7 @@ module TADA
     # @raise TypeError
     def initialize(stat)
       # convert given stat to integer based on its data type
-      if stat.is_a? String
-        @int_stat = CMAP.fetch(stat)
-
-      elsif stat.is_a? Symbol
-        @int_stat = SMAP.fetch(stat)
-
-      elsif stat.is_a? Integer and stat >= 0
-        @int_stat = stat
-
-      elsif stat.is_a? Status
-        @int_stat = stat.to_i
-
-      else
-        raise TypeError, 'expected Integer, String or Symbol'
-      end
+      @int_stat = to_i(stat)
 
       # set string and symbol data reprs by integer MAP
       @sym_stat = MAP[@int_stat][INDEX_SYM]
@@ -48,22 +36,37 @@ module TADA
     # convert to string
     #
     # @see MAP
-    def to_s()
+    def to_s
       @str_stat
     end
 
     # convert to symbol
     #
     # @see SMAP
-    def to_sym()
+    def to_sym
       @sym_stat
     end
 
     # convert to integer
     #
     # @see SMAP
-    def to_i()
+    def to_i
       @int_stat
+    end
+
+    # convert different types to integer status
+    #
+    # @param [String, Symbol, Integer, TADA::Status] stat
+    def self.to_i(stat)
+      if stat.is_a?(String) then CMAP.fetch(stat)
+      elsif stat.is_a?(Symbol) then SMAP.fetch(stat)
+      elsif stat.is_a?(Integer) && stat >= 0 then stat
+      elsif stat.is_a?(Status) then stat.to_i
+      else
+        raise \
+          TypeError,
+          'expected Integer, String, Symbol or TADA::Status'
+      end
     end
 
     # comapre by integer represenation.

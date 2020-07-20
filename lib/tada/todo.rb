@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'tada/ref'
 require 'tada/status'
 
 module TADA
-  # todo unit with nesting and info options, providing CRUD utils.
+  # to do task with nesting and info options, providing CRUD utils.
   class TODO
     attr_accessor :status  # @return [TADA::Status]
     attr_accessor :title   # @return [String]
@@ -22,14 +24,14 @@ module TADA
     # @param [Array<TADA::TODO>] sublist
     #   A list of child tasks for current task.
     def initialize(status, title, info: {}, sublist: [])
-      error = proc { |s| raise TypeError, "expected " + s }
+      error = proc { |s| raise TypeError, "expected #{s}" }
 
       status = Status.new(status)
 
-      error.("status as a TADA::Status") if not status.is_a?(Status)
-      error.("title as a String") if not title.is_a?(String)
-      error.("info as a Hash") if not info.is_a?(Hash)
-      error.("sublist as an Array") if not sublist.is_a?(Array)
+      error.call('status as a TADA::Status') unless status.is_a?(Status)
+      error.call('title as a String') unless title.is_a?(String)
+      error.call('info as a Hash') unless info.is_a?(Hash)
+      error.call('sublist as an Array') unless sublist.is_a?(Array)
 
       @status = status
       @title = title.strip
@@ -44,20 +46,16 @@ module TADA
     # @return [TADA::TODO] returns itself
     def create(ref, todo)
       # if ref ends here, make the entry in sublist
-      if ref.empty?
-        @sublist << todo
-        return self
-      end
+      (@sublist << todo) && (return self) if ref.empty?
 
       # select top level refrenced entries
       first = ref.first
       @sublist.each_with_index do |entry, i|
-        if entry.match?(first, i)
+        entry.match?(first, i) &&
           @sublist[i] = entry.create(ref.rest, todo)
-        end
       end
 
-      return self
+      self
     end
 
     # Get/Retrieve a todo entry at given reference.
@@ -69,10 +67,13 @@ module TADA
 
       # select rest of ref on those entries in sublist
       # which match the first of ref
+      ret = []
       rest = Ref.new(ref.rest)
       @sublist.each_with_index.select do |entry, i|
-        entry.retrieve(rest) if entry.match?(ref.first, i)
-      end.map { |x, i| x }.flatten.compact
+        ret << entry.retrieve(rest) if entry.match?(ref.first, i)
+      end
+
+      ret.flatten.compact
     end
 
     # Update a todo entry at given refrence.
@@ -98,12 +99,10 @@ module TADA
       # select top level refrenced entries
       first = ref.first
       @sublist.each_with_index do |entry, i|
-        if entry.match?(first, i)
-          @sublist[i] = entry.delete(ref.rest)
-        end
+        @sublist[i] = entry.delete(ref.rest) if entry.match?(first, i)
       end
 
-      return self
+      self
     end
 
     # Moves a todo entry at +src_ref+ to +dst_ref+
@@ -118,7 +117,7 @@ module TADA
       delete(src_ref)
       create(dst_ref, todo)
 
-      return self
+      self
     end
 
     # checks if this entry match given reference considering that
@@ -128,21 +127,20 @@ module TADA
     # @param [Integer] index
     # @return [true, false]
     # @raise TypeError
-    def match?(ref, index)
+    def match?(ref, index = 0)
       return ref == index if ref.is_a? Integer
-      return ref === index if ref.is_a? Range
+      return ref.include? index if ref.is_a? Range
       return match?(ref.first) if ref.is_a? Ref
 
       if ref.is_a? Hash
         ref.each_pair do |key, value|
-          return false if not @info.key? key
-          return false if @info[key] !~ value
+          return false if !@info.key?(key) || @info[key] !~ value
         end
 
         return true
       end
 
-      raise TypeError, "expected Integer, Range, Ref, or Hash"
+      raise TypeError, 'expected Integer, Range, Ref, or Hash'
     end
 
     # Retrieve all given references.

@@ -1,6 +1,8 @@
-require 'date'
+# frozen_string_literal: true
 
-$:.unshift('lib')
+$LOAD_PATH.unshift('lib')
+
+require 'date'
 
 require 'tada/version'
 
@@ -32,7 +34,7 @@ Gem::Specification.new do |s|
   s.files      += Dir['docs/*']
   s.files      += Dir['README.md']
 
-#  s.executables << 'tada'
+  s.required_ruby_version = '>= 2.7'
 
   s.add_development_dependency 'rake', '~> 13'
   s.add_development_dependency 'rubocop', '~> 0.86'

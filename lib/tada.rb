@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tada/todo'
 require 'tada/manager'
 require 'tada/ref'
