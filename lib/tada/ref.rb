@@ -40,7 +40,7 @@ module TADA
     #
     # @return [true, false]
     def singular?
-      @refs.size == 1 and @refs[0].class != Ref
+      @refs.size == 1 and !@refs[0].is_a?(Ref)
     end
 
     # Convert to array.
