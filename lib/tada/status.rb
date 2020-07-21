@@ -62,7 +62,7 @@ module TADA
       number =
         if stat.is_a?(String) then CMAP.fetch(stat, nil)
         elsif stat.is_a?(Symbol) then SMAP.fetch(stat, nil)
-        elsif stat.is_a?(Integer) && (0..(MAP.size)).include?(stat)
+        elsif stat.is_a?(Integer) && (0...(MAP.size)).include?(stat)
           stat
         elsif stat.is_a?(Status) then stat.to_i
         end
