@@ -38,9 +38,9 @@ module TADA
       stat = stat.to_i if stat.is_a?(Status)
 
       ANY2INT.fetch(stat) do
-       raise \
-         TypeError,
-         'expected Integer, String, Symbol or TADA::Status'
+        raise \
+          TypeError,
+          'expected Integer, String, Symbol or TADA::Status'
       end
     end
 
@@ -48,9 +48,9 @@ module TADA
     #
     # @param [TADA::Status] stat
     # @return [-1, 0, 1]
-    def <=>(stat)
+    def <=>(other)
       # compare by integer representation of status
-      @to_i <=> stat.to_i
+      @to_i <=> other.to_i
     end
   end
 end
