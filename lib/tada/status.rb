@@ -26,7 +26,7 @@ module TADA
     # @raise TypeError
     def initialize(stat)
       # convert given stat to integer based on its data type
-      @int_stat = to_i(stat)
+      @int_stat = Status.to_i(stat)
 
       # set string and symbol data reprs by integer MAP
       @sym_stat = MAP[@int_stat][INDEX_SYM]
