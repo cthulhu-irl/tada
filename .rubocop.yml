@@ -8,10 +8,20 @@ AllCops:
     Exclude:
         - spec/spec_helper.rb
 
+Style/MixinUsage:
+    Exclude:
+        - spec/*.rb
+
 Metrics/MethodLength:
     Enabled: false
 
 Metrics/CyclomaticComplexity:
+    Enabled: false
+
+Metrics/BlockLength:
+    Enabled: false
+
+Metrics/PerceivedComplexity:
     Enabled: false
 
 Style/AccessorGrouping:
