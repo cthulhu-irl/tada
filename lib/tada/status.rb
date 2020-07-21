@@ -20,7 +20,6 @@ module TADA
     # Initialize and convert given +stat+ to different representations
     #
     # @param [String, Symbol, Integer, TADA::Status] stat
-    # @raise TypeError
     def initialize(stat)
       # convert given stat to integer
       @to_i = Status.to_i(stat)
@@ -33,7 +32,7 @@ module TADA
     # convert different types to integer status
     #
     # @param [String, Symbol, Integer, TADA::Status] stat
-    # @raise [TypeError]
+    # @raise TypeError
     def self.to_i(stat)
       stat = stat.to_i if stat.is_a?(Status)
 
@@ -46,7 +45,7 @@ module TADA
 
     # comapre by integer represenation.
     #
-    # @param [TADA::Status] stat
+    # @param [TADA::Status] other
     # @return [-1, 0, 1]
     def <=>(other)
       # compare by integer representation of status
