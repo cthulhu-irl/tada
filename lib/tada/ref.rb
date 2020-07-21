@@ -7,6 +7,7 @@ module TADA
     #
     # @param [Array<Integer, Range, Hash{String => Regexp}, TADA::Ref>] refs
     #   given array will be flatten.
+    # @raise TypeError
     def initialize(*refs)
       # flatten the refs
       refs.flatten!
