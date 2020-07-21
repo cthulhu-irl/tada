@@ -53,7 +53,7 @@ module TADA
     # Get top level singular reference unit.
     #
     # @return [Integer, Range, Hash]
-    def head
+    def first
       @refs.first
     end
 
