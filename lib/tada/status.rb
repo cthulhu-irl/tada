@@ -5,53 +5,29 @@ module TADA
   class Status
     include Comparable
 
-    # index of corresponding data representation in MAP
-    INDEX_STR = 0
-    INDEX_SYM = 1 # @see INDEX_STR
+    # string and symbol representations,
+    # index is numeric representation
+    CODES = [['-', :todo], ['x', :doing], ['+', :done]].freeze
 
-    # maps of representations per data type to integer
-    CMAP = { '-' => 0, 'x' => 1, '+' => 2 }.freeze
-    SMAP = { todo: 0, doing: 1, done: 2 }.freeze # @see CMAP
+    INT2STR = CODES.map(&:first)
+    INT2SYM = CODES.map(&:last)
+    ANY2INT = CODES.each_with_index.reduce({}) do |acc, (keys, i)|
+      acc.merge({ i => i }, keys.to_h { |key| [key, i] })
+    end.freeze
 
-    # map of integer representation to string and symbol data types
-    MAP = [
-      ['-', :todo],
-      ['x', :doing],
-      ['+', :done]
-    ].freeze
+    attr_reader :to_i, :to_s, :to_sym
 
     # Initialize and convert given +stat+ to different representations
     #
     # @param [String, Symbol, Integer, TADA::Status] stat
     # @raise TypeError
     def initialize(stat)
-      # convert given stat to integer based on its data type
-      @int_stat = Status.to_i(stat)
+      # convert given stat to integer
+      @to_i = Status.to_i(stat)
 
       # set string and symbol data reprs by integer MAP
-      @sym_stat = MAP[@int_stat][INDEX_SYM]
-      @str_stat = MAP[@int_stat][INDEX_STR]
-    end
-
-    # convert to string
-    #
-    # @see MAP
-    def to_s
-      @str_stat
-    end
-
-    # convert to symbol
-    #
-    # @see SMAP
-    def to_sym
-      @sym_stat
-    end
-
-    # convert to integer
-    #
-    # @see SMAP
-    def to_i
-      @int_stat
+      @to_s   = INT2STR.fetch(@to_i)
+      @to_sym = INT2SYM.fetch(@to_i)
     end
 
     # convert different types to integer status
@@ -59,30 +35,22 @@ module TADA
     # @param [String, Symbol, Integer, TADA::Status] stat
     # @raise [TypeError]
     def self.to_i(stat)
-      number =
-        if stat.is_a?(String) then CMAP.fetch(stat, nil)
-        elsif stat.is_a?(Symbol) then SMAP.fetch(stat, nil)
-        elsif stat.is_a?(Integer) && (0...(MAP.size)).include?(stat)
-          stat
-        elsif stat.is_a?(Status) then stat.to_i
-        end
+      stat = stat.to_i if stat.is_a?(Status)
 
-      unless number
-        raise \
-          TypeError,
-          'expected Integer, String, Symbol or TADA::Status'
+      ANY2INT.fetch(stat) do
+       raise \
+         TypeError,
+         'expected Integer, String, Symbol or TADA::Status'
       end
-
-      number
     end
 
     # comapre by integer represenation.
     #
-    # @param [TADA::Status] other
+    # @param [TADA::Status] stat
     # @return [-1, 0, 1]
-    def <=>(other)
+    def <=>(stat)
       # compare by integer representation of status
-      @int_stat <=> other.to_i
+      @to_i <=> stat.to_i
     end
   end
 end
