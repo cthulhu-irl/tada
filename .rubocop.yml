@@ -5,6 +5,8 @@ AllCops:
     DisplayCopNames: true
     DisplayStyleGuide: true
     NewCops: enable
+    Exclude:
+        - spec/spec_helper.rb
 
 Metrics/MethodLength:
     Enabled: false
