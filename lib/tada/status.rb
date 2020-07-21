@@ -57,16 +57,23 @@ module TADA
     # convert different types to integer status
     #
     # @param [String, Symbol, Integer, TADA::Status] stat
+    # @raise [TypeError]
     def self.to_i(stat)
-      if stat.is_a?(String) then CMAP.fetch(stat)
-      elsif stat.is_a?(Symbol) then SMAP.fetch(stat)
-      elsif stat.is_a?(Integer) && MAP[stat] then stat
-      elsif stat.is_a?(Status) then stat.to_i
-      else
+      number =
+        if stat.is_a?(String) then CMAP.fetch(stat, nil)
+        elsif stat.is_a?(Symbol) then SMAP.fetch(stat, nil)
+        elsif stat.is_a?(Integer) && (0..(MAP.size)).include?(stat)
+          stat
+        elsif stat.is_a?(Status) then stat.to_i
+        end
+
+      unless number
         raise \
           TypeError,
           'expected Integer, String, Symbol or TADA::Status'
       end
+
+      number
     end
 
     # comapre by integer represenation.
