@@ -60,7 +60,7 @@ module TADA
     def self.to_i(stat)
       if stat.is_a?(String) then CMAP.fetch(stat)
       elsif stat.is_a?(Symbol) then SMAP.fetch(stat)
-      elsif stat.is_a?(Integer) && stat >= 0 then stat
+      elsif stat.is_a?(Integer) && MAP[stat] then stat
       elsif stat.is_a?(Status) then stat.to_i
       else
         raise \
