@@ -8,9 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@master
     - name: Send Notification in Telegram
       uses: yanzay/notify-telegram@v0.1.0
+      if: always()
       with:
         chat: ${{ secrets.TELEGRAM_RECIEVER }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
