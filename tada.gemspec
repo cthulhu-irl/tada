@@ -37,7 +37,9 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.7'
 
   s.add_development_dependency 'rake', '~> 13'
+  s.add_development_dependency 'rspec', '~> 3.9'
   s.add_development_dependency 'rubocop', '~> 0.86'
+  s.add_development_dependency 'rubocop-rake', '~> 0.5'
   s.add_development_dependency 'simplecov', '~> 0.18'
   s.add_development_dependency 'yard', '~> 0.9'
 end
