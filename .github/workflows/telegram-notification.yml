@@ -10,7 +10,8 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Send Notification in Telegram
-      uses: appleboy/telegram-action@master
+      uses: yanzay/notify-telegram@v0.1.0
       with:
-        to: ${{ secrets.TELEGRAM_RECIEVER }}
+        chat: ${{ secrets.TELEGRAM_RECIEVER }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
+        status: ${{ job.status }}
