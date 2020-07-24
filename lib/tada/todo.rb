@@ -123,7 +123,7 @@ module TADA
     # checks if this entry match given reference considering that
     # this entry is at given index of its parent's sublist.
     #
-    # @param [TADA::Ref] ref
+    # @param [TADA::Ref, Integer, Range, Hash] ref
     # @param [Integer] index
     # @return [true, false]
     # @raise TypeError
