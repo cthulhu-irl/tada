@@ -4,7 +4,7 @@ require 'rubocop/rake_task'
 require 'rspec/core/rake_task'
 require 'yard'
 
-task default: %i[rubocop spec]
+task default: %i[rubocop doc spec]
 
 RuboCop::RakeTask.new(:rubocop) do |t|
   t.options = ['--display-cop-names']
