@@ -33,6 +33,15 @@ module TADA
       error.call('info as a Hash') unless info.is_a?(Hash)
       error.call('sublist as an Array') unless sublist.is_a?(Array)
 
+      info.each_pair do |k, v|
+        error.call('info keys as String') unless k.is_a?(String)
+        error.call('info values as String') unless v.is_a?(String)
+      end
+
+      sublist.each do |v|
+        error.call('sublist cells as TADA::TODO') unless v.is_a?(TODO)
+      end
+
       @status = status
       @title = title.strip
       @info = info

@@ -12,6 +12,9 @@ Style/MixinUsage:
     Exclude:
         - spec/*.rb
 
+Style/AccessorGrouping:
+    Enabled: false
+
 Lint/UselessComparison:
     Exclude:
         - spec/*.rb
@@ -28,5 +31,5 @@ Metrics/BlockLength:
 Metrics/PerceivedComplexity:
     Enabled: false
 
-Style/AccessorGrouping:
+Metrics/AbcSize:
     Enabled: false
