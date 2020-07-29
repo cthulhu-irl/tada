@@ -3,6 +3,10 @@
 module TADA
   # nested reference to point at several todos
   class Ref
+    VALID_REF_TYPES = [
+      Integer, String, Regexp, Status, Symbol, Range, Hash, Ref
+    ].freeze
+
     # Make a reference by given +refs+ which will be as a queue.
     #
     # @param [Array<Integer, Range, Hash{String => Regexp}, TADA::Ref>] refs
@@ -14,7 +18,7 @@ module TADA
 
       # check each ref has a valid type
       refs.each_with_index do |ref, i|
-        unless [Integer, Range, Hash, Ref].include? ref.class
+        unless VALID_REF_TYPES.include? ref.class
           raise \
             TypeError,
             'each ref must be Integer, Range, Hash, or Ref'
