@@ -23,12 +23,24 @@ RSpec.describe TODO do
       expect(TODO.new(Status.new(0), '').status.to_i).to eql 0
     end
 
-    it "doesn't check info's keys and values types" do
-      expect(TODO.new(1, '', info: { x: 1 }).info).to eql({ x: 1 })
+    it "checks info's keys and values types" do
+      expect do
+        TODO.new(1, '', info: { x: 1 }).info
+      end.to raise_error TypeError
+
+      expect do
+        TODO.new(1, '', info: { 'x' => 'y' }).info
+      end.not_to raise_error
     end
 
-    it "doesn't check sublist's cells types" do
-      expect(TODO.new(1, '', sublist: [1]).sublist).to eql([1])
+    it "checks sublist's cells types" do
+      expect do
+        TODO.new(1, '', sublist: [1, 'str']).sublist
+      end.to raise_error TypeError
+
+      expect do
+        TODO.new(1, '', sublist: [TODO.new(0, '')]).sublist
+      end.not_to raise_error
     end
   end
 
