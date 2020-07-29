@@ -12,9 +12,6 @@ RSpec.describe Ref do
   end
 
   it 'raises TypeError when invalid type' do
-    expect { Ref.new('test') }.to raise_error TypeError
-    expect { Ref.new({ 'x' => 'a' }) }.to raise_error TypeError
-    expect { Ref.new(/x/) }.to raise_error TypeError
     expect { Ref.new(12.1) }.to raise_error TypeError
     expect { Ref.new({ a: /a/ }) }.to raise_error TypeError
   end
