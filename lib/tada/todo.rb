@@ -139,6 +139,13 @@ module TADA
     def match?(ref, index = 0)
       return ref == index if ref.is_a? Integer
       return ref.include? index if ref.is_a? Range
+
+      return title.include?(ref) if ref.is_a? String
+      return ref.match?(title) if ref.is_a? Regexp
+
+      return status == ref if ref.is_a? Status
+      return status == Status.new(ref) if ref.is_a? Symbol
+
       return match?(ref.first) if ref.is_a? Ref
 
       if ref.is_a? Hash
