@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'tada/status'
+
 module TADA
   # nested reference to point at several todos
   class Ref
