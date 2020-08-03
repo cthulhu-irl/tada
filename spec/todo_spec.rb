@@ -12,7 +12,10 @@ RSpec.describe TODO do
       sublist: [
         TODO.new(
           :done, 'authentication system',
-          info: { 'note' => 'use JWT' }
+          info: { 'note' => 'use JWT' },
+          sublist: [
+            TODO.new(:todo, 'something')
+          ]
         ),
         TODO.new(
           :todo, 'middlewares',
@@ -153,23 +156,40 @@ RSpec.describe TODO do
   describe 'crud and #move' do
     describe '#create' do
       it 'inserts given todo at all places given reference points' do
-        todo = TODO.new(:todo, 'test')
-
         test1 = TODO.new(:todo, 'test1')
-        complex.create(Ref.new('root', { 'note' => // }), test1)
+        complex.create(Ref.new({ 'note' => // }), test1)
 
-        expect(todo.sublist[0].sublist[0]).to be test1
+        expect(complex.sublist[0].sublist).to include test1
+        expect(complex.sublist[1].sublist).not_to include test1
+
+        test2 = TODO.new(:todo, 'test2')
+        complex.create(Ref.new({ 'note' => /asdasd/ }), test2)
+
+        expect(complex.sublist[0].sublist).not_to include test2
+        expect(complex.sublist[1].sublist).not_to include test2
+
+        expect(complex.create(Ref.new(3), test1)).to be complex
       end
 
       it 'inserts in its own sublist if given reference is empty' do
-      end
+        test = TODO.new(:todo, 'test')
+        complex.create(Ref.new, test)
 
-      it 'does not insert anything when reference cant be reached' do
+        expect(complex.sublist).to include test
+        expect(complex.sublist[0].sublist).not_to include test
       end
     end
 
     describe '#retrieve' do
       it 'selects and returns referenced todos by given reference' do
+        ret = complex.retrieve(
+          Ref.new(1..2, '', Status.new(:todo), Status.new(:todo))
+        )
+
+        ret.each do |todo|
+          expect(todo.status).to eql Status.new(:todo)
+          expect(%w[x y u v]).to include todo.title
+        end
       end
 
       it 'returns itself when empty reference' do
@@ -179,6 +199,19 @@ RSpec.describe TODO do
     end
 
     describe '#update' do
+      it 'behaves same as create' do
+        test = TODO.new(:doing, 'lol')
+
+        complex.create(Ref.new(//, //), test)
+        created_lols = complex.retrieve(Ref.new(//, //, /^lol$/))
+
+        test.status = Status.new(:done)
+        updated_lols = complex.update(Ref.new(//, //, /^lol$/), test)
+        later_lols = complex.update(Ref.new(//, //, /^lol$/))
+
+        expect(updated_lols.size).to eql created_lols.size
+        expect(updated_lols).to eql later_lols
+      end
     end
 
     describe '#delete' do

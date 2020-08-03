@@ -69,5 +69,12 @@ module TADA
     def rest
       @refs.drop(1)
     end
+
+    # Checks if the reference stack is empty.
+    #
+    # @return [true, false]
+    def empty?
+      @refs.empty?
+    end
   end
 end
