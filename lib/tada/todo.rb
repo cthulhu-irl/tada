@@ -54,11 +54,11 @@ module TADA
     # @param [TADA::TODO] todo
     # @return [TADA::TODO] returns itself
     def create(ref, todo)
-      # if ref ends here, make the entry in sublist
-      (@sublist << todo) && (return self) if ref.empty?
-
       # type fix
       ref = Ref.new(ref) unless ref.is_a?(Ref)
+
+      # if ref ends here, make the entry in sublist
+      (@sublist << todo) && (return self) if ref.empty?
 
       # select top level refrenced entries
       first = ref.first
@@ -75,10 +75,10 @@ module TADA
     # @param [TADA::Ref] ref
     # @return [TADA::TODO, nil] returns nil if not found.
     def retrieve(ref)
-      return self if ref.empty?
-
       # type fix
       ref = Ref.new(ref) unless ref.is_a?(Ref)
+
+      return self if ref.empty?
 
       # select rest of ref on those entries in sublist
       # which match the first of ref
@@ -97,9 +97,12 @@ module TADA
     # @param [TADA::TODO] todo
     # @return [TADA::TODO] returns given +todo+
     def update(ref, todo)
+      # type fix
+      ref = Ref.new(ref) unless ref.is_a?(Ref)
+
       # delete & create entry at ref
       delete(ref)
-      create(ref, todo) # returns self
+      create(Ref.new(ref.to_a[0...-1]), todo) # returns self
     end
 
     # Remove an entry at given reference.
@@ -108,17 +111,19 @@ module TADA
     # @return [TADA::TODO, nil]
     #   returns a copy of deleted todo entry or nil if not found.
     def delete(ref)
-      # if ref ends here, return nil
-      nil if ref.empty?
-
       # type fix
       ref = Ref.new(ref) unless ref.is_a?(Ref)
+
+      # if ref ends here, return nil
+      return nil if ref.empty?
 
       # select top level refrenced entries
       first = ref.first
       @sublist.each_with_index do |entry, i|
         @sublist[i] = entry.delete(ref.rest) if entry.match?(first, i)
       end
+
+      @sublist.compact!
 
       self
     end
@@ -131,9 +136,9 @@ module TADA
     # @return [TADA::TODO] returns itself
     def move(src_ref, dst_ref)
       # retrieve src as a copy, remove src, create the copy at dest
-      todo = retrieve(src_ref)
+      todos = retrieve(src_ref)
       delete(src_ref)
-      create(dst_ref, todo)
+      todos.each { |todo| create(dst_ref, todo) }
 
       self
     end
@@ -172,8 +177,9 @@ module TADA
     #
     # @param [TADA::Ref] refs
     # @return [Array<TADA::TODO, nil>]
-    def at(*refs)
-      refs.map { |ref| retrieve(ref) }
+    def at(first, *rest)
+      ret = [retrieve(first)]
+      ret + rest.map { |ref| retrieve(ref) } unless rest.empty?
     end
 
     # Create/Update an entry at given reference.
@@ -198,6 +204,17 @@ module TADA
     # @param [TADA::TODO] todo
     def []=(ref, todo)
       update(ref, todo)
+    end
+
+    # compare equality of status, title, info and sublist
+    #
+    # @param [TADA::TODO] other
+    # @return [true, false]
+    def ==(other)
+      status == other.status &&
+        title == other.title &&
+        info == other.info &&
+        sublist == other.sublist
     end
   end
 end

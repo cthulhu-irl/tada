@@ -18,11 +18,11 @@ RSpec.describe TODO do
           ]
         ),
         TODO.new(
-          :todo, 'middlewares',
+          :doing, 'middlewares',
           sublist: [
             TODO.new(:todo, 'permission check'),
             TODO.new(
-              :todo, 'flash messages appender',
+              :doing, 'flash messages appender',
               sublist: [
                 TODO.new(:todo, 'x'),
                 TODO.new(:todo, 'y')
@@ -199,7 +199,7 @@ RSpec.describe TODO do
     end
 
     describe '#update' do
-      it 'behaves same as delete and create' do
+      it 'replaces todos at given reference by given todo' do
         test = TODO.new(:doing, 'lol')
 
         complex.create(Ref.new(//, //), test)
@@ -215,29 +215,97 @@ RSpec.describe TODO do
 
     describe '#delete' do
       it 'removes todos pointed by given reference from hierarchy' do
+        ref = Ref.new(//, //, Status.new(:todo))
+        a_todo = TODO.new(:doing, 'a')
+
+        complex.create(Ref.new(//, //), a_todo)
+        complex.delete(ref)
+
+        expect(complex.retrieve(ref)).to be_empty
+
+        doings = complex.retrieve([//, //, Status.new(:doing)])
+        expect(doings).to include a_todo
       end
 
       it 'returns nil when given reference is empty deletes itself' do
+        expect(complex.delete(Ref.new)).to be nil
       end
     end
 
     describe '#move' do
-      it 'deletes source reference from hierarchy' do
-      end
+      it 'is same as delete and create' do
+        src_ref = [0, 0]
 
-      it 'puts todo pointed by source reference at dest reference' do
+        src_todo = complex.retrieve(src_ref)[0]
+        dst_ref = [1, src_todo.title]
+
+        complex.move(src_ref, [1])
+        dst_todo = complex.retrieve(dst_ref)[0]
+
+        expect(complex.retrieve(src_ref)).to be_empty
+        expect(src_todo).not_to be nil
+        expect(dst_todo).not_to be nil
+        expect(src_todo == dst_todo).to be true
       end
     end
   end
 
-  describe '#at and variants' do
-    it 'returns empty array when given no parameter' do
-    end
-
+  describe '#at' do
     it 'returns one retrieve per given argument' do
+      expect(complex.at([//], [//, ''], 1).size).to be 3
     end
   end
 
-  describe '#==' do
+  describe '#set' do
+    it 'sets given todo at given reference' do
+      todo = TODO.new(:todo, 'test')
+      complex.set(//, todo)
+      ret = complex.retrieve('test')
+
+      expect(ret.all? { |t| t == todo }).to be true
+    end
+  end
+
+  describe '#[]' do
+    it 'is same as retrieve' do
+      expect(complex[//] == complex.retrieve(//)).to be true
+    end
+  end
+
+  describe '#[]=' do
+    it 'creates given todo at' do
+      todo = TODO.new(:doing, 'unique title')
+      complex[//] = todo
+      expect(complex.retrieve([//])).to include todo
+    end
+  end
+
+  it '#==' do
+    a = TODO.new(:todo, 'something', info: { 'x' => 'y' })
+    b = TODO.new(:todo, 'something', info: { 'x' => 'y' })
+    c = TODO.new(:todo, 'something', info: { 'x' => 'y', 'u' => 'v' })
+
+    u = TODO.new(
+      :todo, 'something',
+      info: { 'x' => 'y', 'u' => 'v' },
+      sublist: [a, b]
+    )
+    v = TODO.new(
+      :todo, 'something',
+      info: { 'x' => 'y', 'u' => 'v' },
+      sublist: [a, b, c]
+    )
+
+    x = TODO.new(:todo, 'root', sublist: [u, u])
+    y = TODO.new(:todo, 'root', sublist: [u, u])
+    z = TODO.new(:todo, 'root', sublist: [u, v])
+
+    expect(a == b).to be true
+    expect(a == c).to be false
+
+    expect(u == v).to be false
+
+    expect(x == y).to be true
+    expect(y == z).to be false
   end
 end
