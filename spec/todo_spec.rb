@@ -5,6 +5,39 @@ require 'tada'
 include TADA
 
 RSpec.describe TODO do
+  let(:complex) do
+    TODO.new(
+      :doing, 'root',
+      info: { 'note' => 'root node of todo lists' },
+      sublist: [
+        TODO.new(
+          :done, 'authentication system',
+          info: { 'note' => 'use JWT' }
+        ),
+        TODO.new(
+          :todo, 'middlewares',
+          sublist: [
+            TODO.new(:todo, 'permission check'),
+            TODO.new(
+              :todo, 'flash messages appender',
+              sublist: [
+                TODO.new(:todo, 'x'),
+                TODO.new(:todo, 'y')
+              ]
+            ),
+            TODO.new(
+              :todo, 'advanced route',
+              sublist: [
+                TODO.new(:todo, 'u'),
+                TODO.new(:todo, 'v')
+              ]
+            )
+          ]
+        )
+      ]
+    )
+  end
+
   describe '#initialize' do
     it 'raises TypeError when given wrong types' do
       # wrong type parameters
@@ -118,6 +151,51 @@ RSpec.describe TODO do
   end
 
   describe 'crud and #move' do
+    describe '#create' do
+      it 'inserts given todo at all places given reference points' do
+        todo = TODO.new(:todo, 'test')
+
+        test1 = TODO.new(:todo, 'test1')
+        complex.create(Ref.new('root', { 'note' => // }), test1)
+
+        expect(todo.sublist[0].sublist[0]).to be test1
+      end
+
+      it 'inserts in its own sublist if given reference is empty' do
+      end
+
+      it 'does not insert anything when reference cant be reached' do
+      end
+    end
+
+    describe '#retrieve' do
+      it 'selects and returns referenced todos by given reference' do
+      end
+
+      it 'returns itself when empty reference' do
+        todo = TODO.new(:todo, 'test')
+        expect(todo.retrieve(Ref.new)).to be todo
+      end
+    end
+
+    describe '#update' do
+    end
+
+    describe '#delete' do
+      it 'removes todos pointed by given reference from hierarchy' do
+      end
+
+      it 'returns nil when given reference is empty deletes itself' do
+      end
+    end
+
+    describe '#move' do
+      it 'deletes source reference from hierarchy' do
+      end
+
+      it 'puts todo pointed by source reference at dest reference' do
+      end
+    end
   end
 
   describe '#at and variants' do
@@ -126,5 +204,8 @@ RSpec.describe TODO do
 
     it 'returns one retrieve per given argument' do
     end
+  end
+
+  describe '#==' do
   end
 end
