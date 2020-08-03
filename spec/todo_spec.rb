@@ -199,18 +199,17 @@ RSpec.describe TODO do
     end
 
     describe '#update' do
-      it 'behaves same as create' do
+      it 'behaves same as delete and create' do
         test = TODO.new(:doing, 'lol')
 
         complex.create(Ref.new(//, //), test)
         created_lols = complex.retrieve(Ref.new(//, //, /^lol$/))
 
         test.status = Status.new(:done)
-        updated_lols = complex.update(Ref.new(//, //, /^lol$/), test)
-        later_lols = complex.update(Ref.new(//, //, /^lol$/))
+        complex.update(Ref.new(//, //, /^lol$/), test)
+        updated_lols = complex.retrieve(Ref.new(//, //, /^lol$/))
 
         expect(updated_lols.size).to eql created_lols.size
-        expect(updated_lols).to eql later_lols
       end
     end
 

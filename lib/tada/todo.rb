@@ -57,6 +57,9 @@ module TADA
       # if ref ends here, make the entry in sublist
       (@sublist << todo) && (return self) if ref.empty?
 
+      # type fix
+      ref = Ref.new(ref) unless ref.is_a?(Ref)
+
       # select top level refrenced entries
       first = ref.first
       @sublist.each_with_index do |entry, i|
@@ -74,10 +77,13 @@ module TADA
     def retrieve(ref)
       return self if ref.empty?
 
+      # type fix
+      ref = Ref.new(ref) unless ref.is_a?(Ref)
+
       # select rest of ref on those entries in sublist
       # which match the first of ref
       ret = []
-      rest = Ref.new(ref.rest)
+      rest = ref.rest
       @sublist.each_with_index.select do |entry, i|
         ret << entry.retrieve(rest) if entry.match?(ref.first, i)
       end
@@ -104,6 +110,9 @@ module TADA
     def delete(ref)
       # if ref ends here, return nil
       nil if ref.empty?
+
+      # type fix
+      ref = Ref.new(ref) unless ref.is_a?(Ref)
 
       # select top level refrenced entries
       first = ref.first
