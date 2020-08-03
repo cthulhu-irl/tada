@@ -23,7 +23,7 @@ module TADA
         unless VALID_REF_TYPES.include? ref.class
           raise \
             TypeError,
-            'each ref must be Integer, Range, Hash, or Ref'
+            'each ref must be either ' + VALID_REF_TYPES.join(', ')
         end
 
         # if hash, then make sure keys are string and values are regex
@@ -46,7 +46,7 @@ module TADA
     #
     # @return [true, false]
     def singular?
-      @refs.size == 1 and !@refs[0].is_a?(Ref)
+      @refs.size == 1
     end
 
     # Convert to array.
