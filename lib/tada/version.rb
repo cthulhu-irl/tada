@@ -2,5 +2,5 @@
 
 module TADA
   # current version of the gem
-  VERSION = '0.0.0'
+  VERSION = '0.1.0'
 end
