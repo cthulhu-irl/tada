@@ -1,0 +1,35 @@
+require: rubocop-rake
+
+AllCops:
+    TargetRubyVersion: 2.7
+    DisplayCopNames: true
+    DisplayStyleGuide: true
+    NewCops: enable
+    Exclude:
+        - spec/spec_helper.rb
+
+Style/MixinUsage:
+    Exclude:
+        - spec/*.rb
+
+Style/AccessorGrouping:
+    Enabled: false
+
+Lint/UselessComparison:
+    Exclude:
+        - spec/*.rb
+
+Metrics/MethodLength:
+    Enabled: false
+
+Metrics/CyclomaticComplexity:
+    Enabled: false
+
+Metrics/BlockLength:
+    Enabled: false
+
+Metrics/PerceivedComplexity:
+    Enabled: false
+
+Metrics/AbcSize:
+    Enabled: false
