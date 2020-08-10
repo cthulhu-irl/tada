@@ -15,7 +15,7 @@ Style/MixinUsage:
 Style/AccessorGrouping:
     Enabled: false
 
-Lint/UselessComparison:
+Lint/BinaryOperatorWithIdenticalOperands:
     Exclude:
         - spec/*.rb
 
