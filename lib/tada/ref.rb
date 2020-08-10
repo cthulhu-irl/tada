@@ -23,7 +23,7 @@ module TADA
         unless VALID_REF_TYPES.include? ref.class
           raise \
             TypeError,
-            'each ref must be either ' + VALID_REF_TYPES.join(', ')
+            "each ref must be either #{VALID_REF_TYPES.join(', ')}"
         end
 
         # if hash, then make sure keys are string and values are regex
